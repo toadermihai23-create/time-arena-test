@@ -1,69 +1,22 @@
-/* TimeArena demo – App Core */
+/* TimeArena demo – App Core (NO ROLES) */
 
 const $ = (id) => document.getElementById(id);
 
 let state = {
-  role: null,
   minutes: 0,
   playMode: false,
   history: []
 };
 
-/* ---------------- INIT ---------------- */
+/* INIT */
 document.addEventListener("DOMContentLoaded", () => {
-  initLogin();
   initNav();
+  initControls();
   renderAll();
   registerSW();
 });
 
-/* ---------------- LOGIN ---------------- */
-function initLogin() {
-  const btnChild = $("btnChild");
-  const btnParent = $("btnParent");
-  const pinWrap = $("pinWrap");
-  const pinInput = $("pinInput");
-  const pinOk = $("pinOk");
-  const pinCancel = $("pinCancel");
-
-  btnChild.onclick = () => {
-    state.role = "Copil";
-    closeLogin();
-    renderAll();
-  };
-
-  btnParent.onclick = () => {
-    pinWrap.classList.remove("hidden");
-    pinInput.focus();
-  };
-
-  pinCancel.onclick = () => {
-    pinWrap.classList.add("hidden");
-    pinInput.value = "";
-  };
-
-  pinOk.onclick = () => {
-    if (pinInput.value !== "1234") {
-      alert("PIN greșit");
-      return;
-    }
-    state.role = "Părinte";
-    closeLogin();
-    renderAll();
-  };
-
-  openLogin();
-}
-
-function openLogin() {
-  $("loginOverlay").classList.remove("hidden");
-}
-
-function closeLogin() {
-  $("loginOverlay").classList.add("hidden");
-}
-
-/* ---------------- NAV ---------------- */
+/* NAVIGATION */
 function initNav() {
   document.querySelectorAll(".nav button").forEach(btn => {
     btn.onclick = () => {
@@ -73,55 +26,85 @@ function initNav() {
   });
 }
 
-/* ---------------- RENDER ---------------- */
+/* CONTROLS */
+function initControls() {
+  $("togglePlayMode").onclick = () => {
+    state.playMode = !state.playMode;
+    addHistory(`Play Mode ${state.playMode ? "ON" : "OFF"}`);
+    renderAll();
+  };
+
+  $("exportPdf").onclick = () => {
+    alert("Export PDF – pasul următor");
+  };
+}
+
+/* RENDER */
 function renderAll() {
   $("minutes").textContent = state.minutes;
-  $("roleLabel").textContent = state.role || "—";
+  $("level").textContent = Math.floor(state.minutes / 100) + 1;
+  $("motivation").textContent = Math.min(100, 60 + state.minutes / 10) + "%";
   $("playModeLabel").textContent = state.playMode ? "ON" : "OFF";
 
   renderMissions();
   renderPenalties();
+  renderHistory();
 }
 
+/* MISSIONS */
 function renderMissions() {
   const list = $("missionList");
   list.innerHTML = "";
 
   window.MISSIONS.winners.forEach(m => {
     const div = document.createElement("div");
-    div.textContent = `${m.title} (+${m.points})`;
+    div.textContent = `${m.title} (+${m.points} min)`;
     div.onclick = () => {
+      if (!state.playMode) {
+        alert("Play Mode este OFF");
+        return;
+      }
       state.minutes += m.points;
-      state.history.push(m.title);
+      addHistory(m.title);
       renderAll();
     };
     list.appendChild(div);
   });
 }
 
+/* PENALTIES */
 function renderPenalties() {
   const list = $("penaltyList");
   list.innerHTML = "";
 
   window.MISSIONS.penalties.forEach(p => {
     const div = document.createElement("div");
-    div.textContent = `${p.title} (-${p.damage})`;
+    div.textContent = `${p.title} (-${p.damage} min)`;
     div.onclick = () => {
-      if (state.role !== "Părinte") return alert("Doar părintele");
       state.minutes = Math.max(0, state.minutes - p.damage);
-      state.history.push(p.title);
+      addHistory(p.title);
       renderAll();
     };
     list.appendChild(div);
   });
 }
 
-/* ---------------- PDF ---------------- */
-$("exportPdf").onclick = () => {
-  alert("PDF – în versiunea următoare");
-};
+/* HISTORY */
+function renderHistory() {
+  const list = $("historyList");
+  list.innerHTML = "";
+  state.history.slice(-10).reverse().forEach(h => {
+    const div = document.createElement("div");
+    div.textContent = h;
+    list.appendChild(div);
+  });
+}
 
-/* ---------------- SW ---------------- */
+function addHistory(text) {
+  state.history.push(`${new Date().toLocaleTimeString()} – ${text}`);
+}
+
+/* SERVICE WORKER */
 function registerSW() {
   if ("serviceWorker" in navigator) {
     navigator.serviceWorker.register("sw.js");
