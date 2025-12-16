@@ -7,40 +7,92 @@
   <link rel="manifest" href="manifest.json">
   <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
-<header>
-  <h1>🎮 TimeArena Gamify</h1>
-  <p>Time Winner vs Time Loser</p>
-</header>
+<div class="app">
 
-<main>
+  <!-- SIDEBAR / NAV -->
+  <nav class="nav">
+    <button data-view="dashboard">🏠 Panou</button>
+    <button data-view="missions">🎯 Misiuni</button>
+    <button data-view="shop">🛒 Magazin</button>
+    <button data-view="penalties">🚫 Penalități</button>
+    <button data-view="history">📜 Istoric</button>
+    <button data-view="rules">📘 Reguli</button>
+    <button data-view="report">📄 Raport</button>
+  </nav>
 
-<section class="panel unlock">
-  <h2>🔓 Deblochează Timpul</h2>
-  <ul id="unlockList"></ul>
-</section>
+  <!-- MAIN CONTENT -->
+  <main class="content">
 
-<section class="panel winner">
-  <h2>🟢 Time Winner</h2>
-  <ul id="winnerList"></ul>
-</section>
+    <!-- DASHBOARD -->
+    <section id="dashboard" class="view active">
+      <h1>🎮 Playtime Quest</h1>
 
-<section class="panel loser">
-  <h2>🔴 Time Loser</h2>
-  <ul id="loserList"></ul>
-</section>
+      <div class="stats">
+        <div class="card">
+          <h3>⏳ Minute</h3>
+          <p id="minutes">0</p>
+        </div>
 
-<section class="panel recovery">
-  <h2>🔁 Revenire în Joc</h2>
-  <ul id="recoveryList"></ul>
-</section>
+        <div class="card">
+          <h3>⭐ Nivel</h3>
+          <p id="level">1</p>
+        </div>
 
-</main>
+        <div class="card">
+          <h3>🔥 Motivație</h3>
+          <p id="motivation">100%</p>
+        </div>
 
-<footer>
-  <p>⏳ Minute bonus: <span id="minutes">0</span></p>
-</footer>
+        <div class="card">
+          <h3>🎮 Play Mode</h3>
+          <p id="playModeStatus">OFF</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- MISIUNI -->
+    <section id="missions" class="view">
+      <h2>🎯 Misiuni</h2>
+      <ul id="missionList"></ul>
+    </section>
+
+    <!-- MAGAZIN -->
+    <section id="shop" class="view">
+      <h2>🛒 Magazin</h2>
+      <p>Cheltuie minutele câștigate</p>
+    </section>
+
+    <!-- PENALITATI -->
+    <section id="penalties" class="view">
+      <h2>🚫 Penalități</h2>
+      <ul id="penaltyList"></ul>
+    </section>
+
+    <!-- ISTORIC -->
+    <section id="history" class="view">
+      <h2>📜 Istoric</h2>
+      <ul id="historyList"></ul>
+    </section>
+
+    <!-- REGULI -->
+    <section id="rules" class="view">
+      <h2>📘 Regulile Jocului</h2>
+      <p>Temele + limbile sunt obligatorii.</p>
+      <p>Minutele se câștigă, nu se cer.</p>
+    </section>
+
+    <!-- RAPORT -->
+    <section id="report" class="view">
+      <h2>📄 Raport</h2>
+      <button id="exportPDF">Export PDF</button>
+    </section>
+
+  </main>
+
+</div>
 
 <script src="app.js"></script>
 </body>
