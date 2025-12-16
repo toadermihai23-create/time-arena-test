@@ -1,24 +1,15 @@
-const CACHE = "timearena-demo-v1.0.0";
-
-const ASSETS = [
-  "./",
-  "./index.html",
-  "./style.css",
-  "./missions.js",
-  "./app.js",
-  "./manifest.json",
-  "./icon-192.png",
-  "./icon-512.png"
-];
+const CACHE = "timearena-demo-v1.0.3";
 
 self.addEventListener("install", (e) => {
-  e.waitUntil(caches.open(CACHE).then((c) => c.addAll(ASSETS)));
-});
-
-self.addEventListener("activate", (e) => {
   e.waitUntil(
-    caches.keys().then(keys =>
-      Promise.all(keys.map(k => (k !== CACHE ? caches.delete(k) : null)))
+    caches.open(CACHE).then(cache =>
+      cache.addAll([
+        "./",
+        "./index.html",
+        "./style.css",
+        "./missions.js",
+        "./app.js"
+      ])
     )
   );
 });
