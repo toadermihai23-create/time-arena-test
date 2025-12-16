@@ -1,54 +1,47 @@
-<!DOCTYPE html>
-<html lang="ro">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Playtime Quest</title>
-  <link rel="manifest" href="manifest.json">
-  <link rel="stylesheet" href="style.css">
-</head>
-
 <body>
-
 <div class="app">
 
-  <!-- SIDEBAR / NAV -->
+  <!-- NAV -->
   <nav class="nav">
-    <button data-view="dashboard">🏠 Panou</button>
-    <button data-view="missions">🎯 Misiuni</button>
-    <button data-view="shop">🛒 Magazin</button>
-    <button data-view="penalties">🚫 Penalități</button>
-    <button data-view="history">📜 Istoric</button>
-    <button data-view="rules">📘 Reguli</button>
-    <button data-view="report">📄 Raport</button>
+    <button data-view="dashboard">🏠<span>Panou</span></button>
+    <button data-view="missions">🎯<span>Misiuni</span></button>
+    <button data-view="shop">🛒<span>Magazin</span></button>
+    <button data-view="penalties">🚫<span>Penalități</span></button>
+    <button data-view="history">📜<span>Istoric</span></button>
+    <button data-view="rules">📘<span>Reguli</span></button>
+    <button data-view="report">📄<span>Raport</span></button>
   </nav>
 
-  <!-- MAIN CONTENT -->
+  <!-- CONTENT -->
   <main class="content">
 
     <!-- DASHBOARD -->
     <section id="dashboard" class="view active">
       <h1>🎮 Playtime Quest</h1>
 
-      <div class="stats">
-        <div class="card">
-          <h3>⏳ Minute</h3>
-          <p id="minutes">0</p>
+      <div class="stats-grid">
+        <div class="stat-card green">
+          <span>⏳ Minute</span>
+          <strong id="minutes">0</strong>
         </div>
-
-        <div class="card">
-          <h3>⭐ Nivel</h3>
-          <p id="level">1</p>
+        <div class="stat-card blue">
+          <span>⭐ Level</span>
+          <strong id="level">1</strong>
         </div>
-
-        <div class="card">
-          <h3>🔥 Motivație</h3>
-          <p id="motivation">100%</p>
+        <div class="stat-card yellow">
+          <span>🔥 Motivație</span>
+          <strong id="motivation">100%</strong>
         </div>
+        <div class="stat-card red">
+          <span>🔒 Play Mode</span>
+          <strong id="playModeStatus">OFF</strong>
+        </div>
+      </div>
 
-        <div class="card">
-          <h3>🎮 Play Mode</h3>
-          <p id="playModeStatus">OFF</p>
+      <div class="progress-box">
+        <p>Progres către următorul level</p>
+        <div class="progress-bar">
+          <div id="progressFill"></div>
         </div>
       </div>
     </section>
@@ -56,44 +49,25 @@
     <!-- MISIUNI -->
     <section id="missions" class="view">
       <h2>🎯 Misiuni</h2>
-      <ul id="missionList"></ul>
-    </section>
 
-    <!-- MAGAZIN -->
-    <section id="shop" class="view">
-      <h2>🛒 Magazin</h2>
-      <p>Cheltuie minutele câștigate</p>
-    </section>
+      <div class="mission-group">
+        <h3>🔓 Deblochează Timpul</h3>
+        <div class="mission-list" id="unlockMissions"></div>
+      </div>
 
-    <!-- PENALITATI -->
-    <section id="penalties" class="view">
-      <h2>🚫 Penalități</h2>
-      <ul id="penaltyList"></ul>
-    </section>
+      <div class="mission-group">
+        <h3>🟢 Time Winner</h3>
+        <div class="mission-list" id="winnerMissions"></div>
+      </div>
 
-    <!-- ISTORIC -->
-    <section id="history" class="view">
-      <h2>📜 Istoric</h2>
-      <ul id="historyList"></ul>
-    </section>
-
-    <!-- REGULI -->
-    <section id="rules" class="view">
-      <h2>📘 Regulile Jocului</h2>
-      <p>Temele + limbile sunt obligatorii.</p>
-      <p>Minutele se câștigă, nu se cer.</p>
-    </section>
-
-    <!-- RAPORT -->
-    <section id="report" class="view">
-      <h2>📄 Raport</h2>
-      <button id="exportPDF">Export PDF</button>
+      <div class="mission-group">
+        <h3>🟣 Revenire în Joc</h3>
+        <div class="mission-list" id="recoveryMissions"></div>
+      </div>
     </section>
 
   </main>
-
 </div>
 
 <script src="app.js"></script>
 </body>
-</html>
