@@ -1,17 +1,39 @@
-let minutes = Number(localStorage.getItem("minutes")) || 0;
-let level = Math.floor(minutes / 100) + 1;
-let motivation = Math.min(100, 50 + level * 5);
-let playMode = localStorage.getItem("playMode") === "true";
+const unlock = [
+  "📘 Homework Hero – 1h teme + pregătire",
+  "🌍 Language Slayer – 1h limbi",
+  "🕒 Morning Starter – fără dramă"
+];
 
-document.getElementById("minutes").textContent = minutes;
-document.getElementById("level").textContent = level;
-document.getElementById("motivation").textContent = motivation + "%";
-document.getElementById("playModeStatus").textContent = playMode ? "ON" : "OFF";
+const winners = [
+  "🛡 Order Keeper",
+  "🍽 Dish Warrior",
+  "🎒 Gear Prep Master",
+  "👂 Focus Listener",
+  "🤝 Truth Teller",
+  "🧘 No Drama Skill",
+  "⚽ Sport Legend",
+  "🌤 Outdoor Adventurer",
+  "❤️ Family Buddy"
+];
 
-/* NAVIGATION */
-document.querySelectorAll(".nav button").forEach(btn => {
-  btn.onclick = () => {
-    document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
-    document.getElementById(btn.dataset.view).classList.add("active");
-  };
-});
+const recovery = [
+  "🤝 Truth Reset",
+  "🙋 Responsibility Accept",
+  "🧹 Repair Action",
+  "🧘 Calm Cooldown",
+  "❤️ Family Reconnect"
+];
+
+function render(id, list) {
+  const el = document.getElementById(id);
+  list.forEach(m => {
+    const div = document.createElement("div");
+    div.className = "mission-card";
+    div.innerHTML = `<span>${m}</span><span>▶</span>`;
+    el.appendChild(div);
+  });
+}
+
+render("unlockMissions", unlock);
+render("winnerMissions", winners);
+render("recoveryMissions", recovery);
