@@ -2,313 +2,96 @@
 <html lang="ro">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>TimeArena demo</title>
 
-  <link rel="manifest" href="manifest.json" />
-  <meta name="theme-color" content="#0b1220" />
-  <link rel="apple-touch-icon" href="icon-192.png" />
-
-  <link rel="stylesheet" href="style.css" />
+  <link rel="manifest" href="manifest.json"/>
+  <link rel="stylesheet" href="style.css"/>
+  <meta name="theme-color" content="#0b1220"/>
 </head>
 
 <body>
-  <!-- LOGIN / ROLE -->
-  <div id="loginOverlay" class="overlay">
-    <div class="modal">
-      <div class="modal-title">⏳ TimeArena demo</div>
-      <div class="modal-sub">Alege rolul</div>
 
-      <div class="role-grid">
-        <button class="role-btn" id="btnChild">👦 Copil</button>
-        <button class="role-btn role-parent" id="btnParent">👨‍👩‍👦 Părinte</button>
-      </div>
+<!-- LOGIN OVERLAY -->
+<div id="loginOverlay" class="overlay">
+  <div class="modal">
+    <h2>⏳ TimeArena demo</h2>
+    <p>Alege rolul</p>
 
-      <div id="pinWrap" class="pin-wrap hidden">
-        <label for="pinInput">PIN Părinte</label>
-        <input id="pinInput" type="password" inputmode="numeric" placeholder="ex: 1234" />
-        <div class="pin-row">
-          <button id="pinCancel" class="ghost">Anulează</button>
-          <button id="pinOk" class="primary">Intră</button>
-        </div>
-        <div class="tiny">PIN implicit: <b>1234</b> (se poate schimba din Reguli)</div>
+    <div class="role-buttons">
+      <button id="btnChild">👦 Copil</button>
+      <button id="btnParent">👨‍👩‍👦 Părinte</button>
+    </div>
+
+    <div id="pinWrap" class="pin-wrap hidden">
+      <input id="pinInput" type="password" placeholder="PIN părinte (1234)"/>
+      <div class="pin-actions">
+        <button id="pinCancel">Anulează</button>
+        <button id="pinOk">Intră</button>
       </div>
     </div>
   </div>
+</div>
 
-  <div class="app">
-    <!-- SIDEBAR / NAV -->
-    <nav class="nav">
-      <div class="brand">
-        <div class="brand-badge">⏳</div>
-        <div class="brand-meta">
-          <div class="brand-name">TimeArena demo</div>
-          <div class="brand-sub">Playtime Quest System</div>
-        </div>
-      </div>
+<!-- APP -->
+<div class="app">
 
-      <div class="nav-items">
-        <button class="nav-item active" data-view="dashboard">🏠 <span>Panou</span></button>
-        <button class="nav-item" data-view="missions">🎯 <span>Misiuni</span></button>
-        <button class="nav-item" data-view="shop">🛒 <span>Magazin</span></button>
-        <button class="nav-item" data-view="penalties">🚫 <span>Penalități</span></button>
-        <button class="nav-item" data-view="history">📜 <span>Istoric</span></button>
-        <button class="nav-item" data-view="rules">📘 <span>Reguli</span></button>
-        <button class="nav-item" data-view="report">📄 <span>Raport</span></button>
-      </div>
+  <nav class="nav">
+    <h3>⏳ TimeArena</h3>
+    <button data-view="dashboard">🏠 Panou</button>
+    <button data-view="missions">🎯 Misiuni</button>
+    <button data-view="shop">🛒 Magazin</button>
+    <button data-view="penalties">🚫 Penalități</button>
+    <button data-view="history">📜 Istoric</button>
+    <button data-view="rules">📘 Reguli</button>
+    <button data-view="report">📄 Raport</button>
+  </nav>
 
-      <div class="nav-footer">
-        <div class="role-pill" id="rolePill">Rol: —</div>
-        <button class="nav-mini" id="btnSwitchRole">🔁 Schimbă rol</button>
-      </div>
-    </nav>
+  <main class="content">
 
-    <!-- MAIN -->
-    <main class="content">
-      <!-- TOP BAR -->
-      <header class="topbar">
-        <div class="topbar-left">
-          <div class="chip" id="playModeChip">🔒 Play Mode OFF</div>
-          <div class="chip soft" id="unlockChip">🔓 Unlock: —</div>
-        </div>
-        <div class="topbar-right parent-only">
-          <button class="btn" id="togglePlayMode">Toggle Play Mode</button>
-          <button class="btn ghost" id="resetDay">Reset Zi</button>
-        </div>
-      </header>
+    <section id="dashboard" class="view active">
+      <h1>🏠 Panou principal</h1>
+      <p>Minute: <b id="minutes">0</b></p>
+      <p>Rol: <b id="roleLabel">—</b></p>
+      <p>Play Mode: <b id="playModeLabel">OFF</b></p>
+    </section>
 
-      <!-- DASHBOARD -->
-      <section id="dashboard" class="view active">
-        <div class="page-title">
-          <h1>🏠 Panou principal</h1>
-          <p>Status rapid + progres.</p>
-        </div>
+    <section id="missions" class="view">
+      <h1>🎯 Misiuni</h1>
+      <div id="missionList"></div>
+    </section>
 
-        <div class="grid-4">
-          <div class="card stat green">
-            <div class="stat-label">⏳ Minute</div>
-            <div class="stat-value" id="statMinutes">0</div>
-            <div class="stat-sub">Banca de timp</div>
-          </div>
+    <section id="shop" class="view">
+      <h1>🛒 Magazin</h1>
+      <p>(în lucru)</p>
+    </section>
 
-          <div class="card stat blue">
-            <div class="stat-label">⭐ Level</div>
-            <div class="stat-value" id="statLevel">1</div>
-            <div class="stat-sub">+1 level / 100 min</div>
-          </div>
+    <section id="penalties" class="view">
+      <h1>🚫 Penalități</h1>
+      <div id="penaltyList"></div>
+    </section>
 
-          <div class="card stat yellow">
-            <div class="stat-label">🔥 Motivație</div>
-            <div class="stat-value" id="statMotivation">100%</div>
-            <div class="stat-sub">Boost din streak</div>
-          </div>
+    <section id="history" class="view">
+      <h1>📜 Istoric</h1>
+      <div id="historyList"></div>
+    </section>
 
-          <div class="card stat purple">
-            <div class="stat-label">🔥 Streak</div>
-            <div class="stat-value" id="statStreak">0</div>
-            <div class="stat-sub">Zile consecutive bune</div>
-          </div>
-        </div>
+    <section id="rules" class="view">
+      <h1>📘 Reguli</h1>
+      <p>Minutele se câștigă, nu se cer.</p>
+    </section>
 
-        <div class="card progress-card">
-          <div class="row">
-            <div>
-              <div class="mini-title">Progres către următorul level</div>
-              <div class="mini-sub" id="progressText">0 / 100</div>
-            </div>
-            <div class="badge" id="levelBadge">LEVEL 1</div>
-          </div>
-          <div class="progress">
-            <div class="progress-fill" id="progressFill" style="width:0%"></div>
-          </div>
-        </div>
+    <section id="report" class="view">
+      <h1>📄 Raport</h1>
+      <button id="exportPdf">Export PDF</button>
+    </section>
 
-        <div class="grid-2">
-          <div class="card">
-            <div class="card-title">🔓 Deblocări azi</div>
-            <div class="pill-row" id="unlockPills"></div>
-            <div class="tiny">Teme + Limbi + Morning = deblocări cheie.</div>
-          </div>
+  </main>
+</div>
 
-          <div class="card">
-            <div class="card-title">🏆 Quest-uri rapide</div>
-            <div class="quick-list" id="quickMissions"></div>
-          </div>
-        </div>
-      </section>
+<!-- SCRIPTS (ORDINE OBLIGATORIE) -->
+<script src="missions.js"></script>
+<script src="app.js"></script>
 
-      <!-- MISSIONS -->
-      <section id="missions" class="view">
-        <div class="page-title">
-          <h1>🎯 Misiuni</h1>
-          <p>Tap pe ✔ ca să le finalizezi.</p>
-        </div>
-
-        <div class="toolbar">
-          <input id="searchMissions" class="input" placeholder="Caută misiune..." />
-          <select id="filterCategory" class="input">
-            <option value="all">Toate categoriile</option>
-            <option value="responsibility">Responsabilitate</option>
-            <option value="behavior">Comportament</option>
-            <option value="school">Școală</option>
-            <option value="activity">Activități & sport</option>
-            <option value="family">Familie & relație</option>
-            <option value="special">Super Bonus</option>
-            <option value="recovery">Revenire în joc</option>
-            <option value="unlock">Deblocări</option>
-          </select>
-        </div>
-
-        <div class="section-card">
-          <div class="section-head">
-            <h2>🔓 Deblocări</h2>
-            <div class="hint">Obligatorii pentru acces la joc.</div>
-          </div>
-          <div id="listUnlock" class="mission-grid"></div>
-        </div>
-
-        <div class="section-card">
-          <div class="section-head">
-            <h2>🟢 Time Winner</h2>
-            <div class="hint">Câștigi minute.</div>
-          </div>
-          <div id="listWinners" class="mission-grid"></div>
-        </div>
-
-        <div class="section-card">
-          <div class="section-head">
-            <h2>🌟 Bonus fără penalități</h2>
-            <div class="hint">Extra reward (nu se scade).</div>
-          </div>
-          <div id="listBonus" class="mission-grid"></div>
-        </div>
-
-        <div class="section-card">
-          <div class="section-head">
-            <h2>🟣 Revenire în joc</h2>
-            <div class="hint">După pedeapsă gravă.</div>
-          </div>
-          <div id="listRecovery" class="mission-grid"></div>
-        </div>
-      </section>
-
-      <!-- SHOP -->
-      <section id="shop" class="view">
-        <div class="page-title">
-          <h1>🛒 Magazin</h1>
-          <p>Cheltuie minute pentru recompense.</p>
-        </div>
-
-        <div class="shop-grid" id="shopGrid"></div>
-      </section>
-
-      <!-- PENALTIES -->
-      <section id="penalties" class="view">
-        <div class="page-title">
-          <h1>🚫 Penalități</h1>
-          <p>Damage cards: scad minute (bonus) și pot bloca Play Mode.</p>
-        </div>
-
-        <div class="section-card danger">
-          <div class="section-head">
-            <h2>🔴 Damage Cards</h2>
-            <div class="hint">Folosește rar, calm, fără negocieri.</div>
-          </div>
-          <div id="listPenalties" class="mission-grid"></div>
-        </div>
-
-        <div class="card">
-          <div class="card-title">🛑 Blocare / Deblocare</div>
-          <div class="tiny">
-            Dacă ai aplicat o pedeapsă gravă (Play OFF), copilul revine în joc doar după ce finalizează misiunile de <b>Revenire în joc</b>.
-          </div>
-        </div>
-      </section>
-
-      <!-- HISTORY -->
-      <section id="history" class="view">
-        <div class="page-title">
-          <h1>📜 Istoric</h1>
-          <p>Ultimele acțiuni.</p>
-        </div>
-
-        <div class="card">
-          <div class="card-title">Log</div>
-          <div id="historyList" class="history"></div>
-          <div class="row mt">
-            <button class="btn ghost parent-only" id="clearHistory">Șterge istoric</button>
-          </div>
-        </div>
-      </section>
-
-      <!-- RULES -->
-      <section id="rules" class="view">
-        <div class="page-title">
-          <h1>📘 Lista de Reguli</h1>
-          <p>Clar, scurt, ca într-un joc.</p>
-        </div>
-
-        <div class="grid-2">
-          <div class="card">
-            <div class="card-title">🟦 Reguli principale</div>
-            <ul class="rules">
-              <li>Minutele se câștigă, nu se cer.</li>
-              <li>Teme (1h) + Limbi (1h) sunt obligatorii zilnic.</li>
-              <li>Fără misiuni obligatorii → fără bonusuri.</li>
-              <li>Penalizările scad doar bonusurile (exceptând cazuri grave).</li>
-              <li>Zi nouă = reset + șansă nouă.</li>
-            </ul>
-          </div>
-
-          <div class="card">
-            <div class="card-title">🟧 Reguli secundare</div>
-            <ul class="rules">
-              <li>Minciuna blochează bonusurile în ziua respectivă.</li>
-              <li>Trișarea sistemului = Play OFF (pedeapsă gravă).</li>
-              <li>Revenirea în joc se face prin misiuni de Repair/Reset.</li>
-              <li>Streak-ul crește motivația și oferă bonus cosmetic.</li>
-            </ul>
-
-            <div class="card-title mt">🔐 Setări părinte</div>
-            <div class="row">
-              <input id="pinNew" class="input" placeholder="Schimbă PIN (ex: 2468)" inputmode="numeric" />
-              <button class="btn parent-only" id="savePin">Salvează PIN</button>
-            </div>
-            <div class="tiny">PIN-ul controlează accesul de părinte.</div>
-          </div>
-        </div>
-      </section>
-
-      <!-- REPORT -->
-      <section id="report" class="view">
-        <div class="page-title">
-          <h1>📄 Raport</h1>
-          <p>Export PDF (ultimele 7 zile).</p>
-        </div>
-
-        <div class="card">
-          <div class="card-title">Raport săptămânal</div>
-          <div class="row">
-            <button class="btn parent-only" id="exportPdf">📄 Export PDF</button>
-            <button class="btn ghost parent-only" id="endDay">🌙 Închide ziua (streak)</button>
-          </div>
-          <div class="tiny mt">
-            Pentru streak: închide ziua ca “Succes” dacă misiunile obligatorii sunt completate și nu a fost Play OFF.
-          </div>
-        </div>
-      </section>
-
-      <!-- LEVEL UP TOAST -->
-      <div id="toast" class="toast hidden">⭐ LEVEL UP!</div>
-    </main>
-  </div>
-
-  <!-- Confetti + jsPDF -->
-  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-
-  <!-- Data first -->
-  <script src="missions.js"></script>
-  <script src="app.js"></script>
 </body>
 </html>
