@@ -152,21 +152,256 @@
         </div>
       </section>
 
-      <!-- PENALTIES -->
-      <section class="view hidden" id="view-penalties">
-        <div class="card">
-          <div class="card-head">
-            <div>
-              <div class="card-title">Penalități</div>
-              <div class="muted">Aplică doar când e clar: “nu s-a făcut”.</div>
-            </div>
-            <div class="row">
-              <select id="penaltyLevelSelect" class="select"></select>
-            </div>
-          </div>
-          <div id="penaltiesGrid" class="cards"></div>
+      <!-- PENALTIES PANEL -->
+<section class="panel penalties-panel" id="penaltiesPanel" aria-labelledby="penaltiesTitle">
+
+  <header class="panel-header">
+    <div class="panel-title">
+      <span class="panel-ic">⚔️</span>
+      <h2 id="penaltiesTitle">Penalități TimeArena</h2>
+    </div>
+    <p class="panel-sub">
+      În TimeArena, consecințele sunt <b>clare</b>, <b>proporționale</b> și <b>nu se negociază</b>.
+    </p>
+  </header>
+
+  <!-- LEGEND -->
+  <div class="pen-legend">
+    <div class="legend-item easy">
+      <span class="dot"></span>
+      <span><b>Ușor</b> — Corecții (greșeli mici)</span>
+    </div>
+    <div class="legend-item medium">
+      <span class="dot"></span>
+      <span><b>Mediu</b> — Avertismente (comportamente neplăcute)</span>
+    </div>
+    <div class="legend-item hard">
+      <span class="dot"></span>
+      <span><b>Greu</b> — Ban & Reset (încălcări grave)</span>
+    </div>
+  </div>
+
+  <!-- 3 COLUMNS -->
+  <div class="pen-grid">
+
+    <!-- EASY -->
+    <article class="pen-col easy" aria-label="Categoria Ușor">
+      <div class="pen-col-head">
+        <div class="pen-col-badge">
+          <span class="badge-emoji">🟢</span>
+          <span class="badge-title">Ușor</span>
         </div>
-      </section>
+        <p class="pen-col-desc">Corecții rapide. Nu e dramă, e reglaj.</p>
+      </div>
+
+      <div class="pen-cards">
+
+        <div class="pen-card">
+          <div class="pen-card-title">
+            <span class="mini">⚪</span>
+            <b>No Reward</b>
+          </div>
+          <p class="pen-card-text">Nu pierzi timp. Doar nu câștigi.</p>
+          <ul class="pen-list">
+            <li>uitare / nefinalizare</li>
+            <li>făcut pe jumătate</li>
+            <li>neatenție neintenționată</li>
+          </ul>
+          <div class="pen-effect">
+            <span class="chip">Efect: 0 min</span>
+            <span class="chip">Bonus: ✅</span>
+            <span class="chip">Streak: ✅</span>
+          </div>
+        </div>
+
+        <div class="pen-card">
+          <div class="pen-card-title">
+            <span class="mini">🟡</span>
+            <b>Scratch Damage</b>
+          </div>
+          <p class="pen-card-text">Corecție mică. Lecție rapidă.</p>
+          <ul class="pen-list">
+            <li>neatenție repetată</li>
+            <li>întreruperi</li>
+            <li>lene ușoară</li>
+          </ul>
+          <div class="pen-effect">
+            <span class="chip">Efect: −5 / −10 / −15 min</span>
+            <span class="chip">Bonus: ✅</span>
+            <span class="chip">Streak: ✅</span>
+          </div>
+        </div>
+
+      </div>
+    </article>
+
+    <!-- MEDIUM -->
+    <article class="pen-col medium" aria-label="Categoria Mediu">
+      <div class="pen-col-head">
+        <div class="pen-col-badge">
+          <span class="badge-emoji">🟠</span>
+          <span class="badge-title">Mediu</span>
+        </div>
+        <p class="pen-col-desc">Avertismente serioase. Bonusul cade primul.</p>
+      </div>
+
+      <div class="pen-cards">
+
+        <div class="pen-card">
+          <div class="pen-card-title">
+            <span class="mini">🟠</span>
+            <b>Penalty Zone</b>
+          </div>
+          <p class="pen-card-text">Comportamente neplăcute, dar reversibile.</p>
+          <ul class="pen-list">
+            <li>victimizare</li>
+            <li>cerșit timp</li>
+            <li>pasiv-agresiv</li>
+            <li>evitare („mă doare”)</li>
+          </ul>
+          <div class="pen-effect">
+            <span class="chip">Efect: −20 / −30 / −45 min</span>
+            <span class="chip danger">Bonus: ❌</span>
+            <span class="chip">Streak: ⚠️</span>
+          </div>
+        </div>
+
+        <div class="pen-card">
+          <div class="pen-card-title">
+            <span class="mini">🔴</span>
+            <b>Daily Ban</b>
+          </div>
+          <p class="pen-card-text">Ziua se oprește. Revii mâine prin Re-Entry.</p>
+          <ul class="pen-list">
+            <li>minciună clară</li>
+            <li>dat vina pe alții</li>
+            <li>manipulare emoțională</li>
+            <li>refuz școală / igienă</li>
+          </ul>
+          <div class="pen-effect">
+            <span class="chip danger">Ecrane: 🚫 1 zi</span>
+            <span class="chip danger">Bonus: ❌</span>
+            <span class="chip danger">Streak: Reset</span>
+          </div>
+        </div>
+
+      </div>
+    </article>
+
+    <!-- HARD -->
+    <article class="pen-col hard" aria-label="Categoria Greu">
+      <div class="pen-col-head">
+        <div class="pen-col-badge">
+          <span class="badge-emoji">🔴</span>
+          <span class="badge-title">Greu</span>
+        </div>
+        <p class="pen-col-desc">Ban & Reset. Protejăm jocul și încrederea.</p>
+      </div>
+
+      <div class="pen-cards">
+
+        <div class="pen-card">
+          <div class="pen-card-title">
+            <span class="mini">⚫</span>
+            <b>Cooldown Extins</b>
+          </div>
+          <p class="pen-card-text">Ieși temporar din arenă (2–3 zile).</p>
+          <ul class="pen-list">
+            <li>repetare Daily Ban</li>
+            <li>lipsă de respect</li>
+            <li>sabotaj intenționat</li>
+            <li>minciună repetată</li>
+          </ul>
+          <div class="pen-effect">
+            <span class="chip danger">Ecrane: 🚫 2–3 zile</span>
+            <span class="chip danger">Bonus: ❌</span>
+            <span class="chip danger">Streak: Reset</span>
+          </div>
+        </div>
+
+        <div class="pen-card">
+          <div class="pen-card-title">
+            <span class="mini">🟥</span>
+            <b>Season Ban</b>
+          </div>
+          <p class="pen-card-text">Sezon închis (1–2 săptămâni). Reset parțial.</p>
+          <ul class="pen-list">
+            <li>încălcări grave ale regulilor</li>
+            <li>lipsă totală de cooperare</li>
+            <li>minciuni mari</li>
+          </ul>
+          <div class="pen-effect">
+            <span class="chip danger">Ecrane: 🚫 7–14 zile</span>
+            <span class="chip danger">Level: −</span>
+            <span class="chip danger">Streak: Reset</span>
+          </div>
+        </div>
+
+        <div class="pen-card breach">
+          <div class="pen-card-title">
+            <span class="mini">☠️</span>
+            <b>Game Over Temporar</b>
+          </div>
+          <p class="pen-card-text">Reset major (30 zile). Doar TimeArena Lite.</p>
+          <ul class="pen-list">
+            <li><b>System Breach</b> (telefon ascuns)</li>
+            <li>acces fără permisiune</li>
+            <li>sfidare totală</li>
+          </ul>
+          <div class="pen-effect">
+            <span class="chip danger">Ecrane: 🚫 30 zile</span>
+            <span class="chip danger">Level: Reset</span>
+            <span class="chip danger">Streak: Reset</span>
+          </div>
+        </div>
+
+      </div>
+    </article>
+
+  </div>
+
+  <!-- RULES STRIP -->
+  <div class="pen-rules">
+    <h3 class="pen-rules-title">📜 Reguli de bază (Nu se negociază)</h3>
+    <div class="pen-rules-grid">
+      <div class="rule">❌ Plânsul nu schimbă nivelul</div>
+      <div class="rule">❌ Negocierea nu există</div>
+      <div class="rule">🔁 Repetarea = escaladare automată</div>
+      <div class="rule">🧠 Explicăm o dată. Apoi jocul aplică.</div>
+    </div>
+  </div>
+
+  <!-- RE-ENTRY + REDEMPTION -->
+  <div class="pen-bottom">
+
+    <div class="pen-box">
+      <h3>🔁 Re-Entry Quest (Obligatoriu după ban)</h3>
+      <ol class="pen-steps">
+        <li><b>🧾 Raportul Eroului</b> — Ce s-a întâmplat? Ce regulă? Ce aleg diferit?</li>
+        <li><b>🔧 Misiune de Reparație</b> — faptă concretă (nu dă timp, doar deblochează)</li>
+        <li><b>🟡 Zi de Probă</b> — fără Bonus Time, fără streak, timp minim</li>
+      </ol>
+    </div>
+
+    <div class="pen-box">
+      <h3>💠 Răscumpărare Zile (cu puncte)</h3>
+      <p class="muted">O zi de ban NU trece automat. Se consumă doar dacă este „plătită”.</p>
+      <ul class="pen-list">
+        <li>🔴 Daily Ban: <b>100p</b> / zi</li>
+        <li>⚫ Cooldown: <b>120p</b> / zi (1 zi fixă)</li>
+        <li>🟥 Season Ban: <b>150p</b> / zi (3 zile fixe)</li>
+        <li>☠️ Game Over: <b>200p</b> / zi (primele 7 zile fixe)</li>
+      </ul>
+    </div>
+
+  </div>
+
+  <footer class="panel-footer">
+    <span class="footer-note">🧩 „Jocul e corect. Nu te pedepsește, dar nici nu negociază.”</span>
+  </footer>
+
+</section>
+
 
       <!-- RULES -->
       <section class="view hidden" id="view-rules">
@@ -210,3 +445,4 @@
   <script type="module" src="app.js"></script>
 </body>
 </html>
+
