@@ -1,12 +1,8 @@
-* {
-  box-sizing: border-box;
-}
-
 body {
   margin: 0;
-  background: #121212;
-  color: white;
-  font-family: Arial, sans-serif;
+  font-family: "Trebuchet MS", Arial, sans-serif;
+  background: #0f172a;
+  color: #e5e7eb;
 }
 
 .app {
@@ -17,7 +13,7 @@ body {
 /* NAV */
 .nav {
   width: 220px;
-  background: #1c1c1c;
+  background: #020617;
   display: flex;
   flex-direction: column;
 }
@@ -25,66 +21,96 @@ body {
 .nav button {
   background: none;
   border: none;
-  color: white;
-  padding: 16px;
-  text-align: left;
+  color: #e5e7eb;
+  padding: 14px;
   font-size: 16px;
+  display: flex;
+  gap: 10px;
   cursor: pointer;
 }
 
 .nav button:hover {
-  background: #2a2a2a;
+  background: #1e293b;
 }
 
 /* CONTENT */
 .content {
   flex: 1;
-  padding: 16px;
-}
-
-/* VIEWS */
-.view {
-  display: none;
-}
-.view.active {
-  display: block;
+  padding: 20px;
 }
 
 /* DASHBOARD */
-.stats {
+.stats-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(140px,1fr));
   gap: 12px;
 }
 
-.card {
-  background: #1e1e1e;
-  border-radius: 10px;
+.stat-card {
   padding: 16px;
+  border-radius: 14px;
   text-align: center;
 }
 
+.stat-card.green { background:#14532d; }
+.stat-card.blue { background:#0c4a6e; }
+.stat-card.yellow { background:#713f12; }
+.stat-card.red { background:#7f1d1d; }
+
+.progress-box {
+  margin-top: 20px;
+}
+
+.progress-bar {
+  height: 14px;
+  background:#1e293b;
+  border-radius: 10px;
+  overflow:hidden;
+}
+
+.progress-bar div {
+  height:100%;
+  background:#22c55e;
+  width:0%;
+}
+
+/* MISSIONS */
+.mission-group {
+  margin-bottom: 24px;
+}
+
+.mission-list {
+  display: grid;
+  gap: 10px;
+}
+
+.mission-card {
+  background:#1e293b;
+  padding: 14px;
+  border-radius: 14px;
+  display:flex;
+  justify-content: space-between;
+  align-items:center;
+  cursor:pointer;
+}
+
+.mission-card:hover {
+  background:#334155;
+}
+
 /* MOBILE */
-@media (max-width: 768px) {
-  .app {
-    flex-direction: column;
-  }
-
+@media(max-width:768px){
+  .app { flex-direction:column; }
   .nav {
-    flex-direction: row;
-    width: 100%;
-    position: fixed;
-    bottom: 0;
-    z-index: 10;
+    flex-direction:row;
+    width:100%;
+    position:fixed;
+    bottom:0;
   }
-
   .nav button {
-    flex: 1;
-    font-size: 12px;
-    padding: 10px;
+    flex:1;
+    justify-content:center;
+    font-size:14px;
   }
-
-  .content {
-    padding-bottom: 80px;
-  }
+  .content { padding-bottom:80px; }
 }
