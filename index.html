@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html lang="ro">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>TimeArena demo</title>
 
-  <link rel="manifest" href="manifest.json"/>
-  <link rel="stylesheet" href="style.css"/>
-  <meta name="theme-color" content="#0b1220"/>
+  <link rel="stylesheet" href="style.css">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#0b1220">
 </head>
 
 <body>
@@ -16,66 +16,62 @@
 
   <!-- NAV -->
   <nav class="nav">
-    <h3>⏳ TimeArena</h3>
-    <button data-view="dashboard">🏠 Panou</button>
-    <button data-view="missions">🎯 Misiuni</button>
-    <button data-view="shop">🛒 Magazin</button>
-    <button data-view="penalties">🚫 Penalități</button>
-    <button data-view="history">📜 Istoric</button>
-    <button data-view="rules">📘 Reguli</button>
-    <button data-view="report">📄 Raport</button>
+    <button data-view="dashboard">🏠<span>Panou</span></button>
+    <button data-view="missions">🎯<span>Misiuni</span></button>
+    <button data-view="shop">🛒<span>Magazin</span></button>
+    <button data-view="penalties">🚫<span>Penalități</span></button>
+    <button data-view="history">📜<span>Istoric</span></button>
+    <button data-view="rules">📘<span>Reguli</span></button>
+    <button data-view="report">📄<span>Raport</span></button>
   </nav>
 
   <!-- CONTENT -->
   <main class="content">
 
-    <!-- DASHBOARD -->
     <section id="dashboard" class="view active">
-      <h1>🏠 Panou principal</h1>
-      <p>⏳ Minute disponibile: <b id="minutes">0</b></p>
-      <p>⭐ Level: <b id="level">1</b></p>
-      <p>🔥 Motivație: <b id="motivation">100%</b></p>
-      <p>🔒 Play Mode: <b id="playModeLabel">OFF</b></p>
+      <h1>🎮 TimeArena demo</h1>
+
+      <div class="stats">
+        <div class="card">⏳ Minute<br><b id="minutes">0</b></div>
+        <div class="card">⭐ Level<br><b id="level">1</b></div>
+        <div class="card">🔥 Motivație<br><b id="motivation">100%</b></div>
+        <div class="card">🔒 Play Mode<br><b id="playModeLabel">OFF</b></div>
+      </div>
+
       <button id="togglePlayMode">Toggle Play Mode</button>
     </section>
 
-    <!-- MISSIONS -->
     <section id="missions" class="view">
-      <h1>🎯 Misiuni</h1>
+      <h2>🎯 Misiuni</h2>
       <div id="missionList"></div>
     </section>
 
-    <!-- SHOP -->
     <section id="shop" class="view">
-      <h1>🛒 Magazin</h1>
-      <p>(va fi extins)</p>
+      <h2>🛒 Magazin</h2>
+      <p>(în lucru)</p>
     </section>
 
-    <!-- PENALTIES -->
     <section id="penalties" class="view">
-      <h1>🚫 Penalități</h1>
+      <h2>🚫 Penalități</h2>
       <div id="penaltyList"></div>
     </section>
 
-    <!-- HISTORY -->
     <section id="history" class="view">
-      <h1>📜 Istoric</h1>
+      <h2>📜 Istoric</h2>
       <div id="historyList"></div>
     </section>
 
-    <!-- RULES -->
     <section id="rules" class="view">
-      <h1>📘 Reguli</h1>
+      <h2>📘 Reguli</h2>
       <ul>
-        <li>Minutele se câștigă, nu se cer.</li>
-        <li>Temele și limbile sunt obligatorii.</li>
-        <li>Play Mode poate fi ON sau OFF.</li>
+        <li>Minutele se câștigă prin misiuni</li>
+        <li>Play Mode trebuie să fie ON</li>
+        <li>Penalitățile scad minute</li>
       </ul>
     </section>
 
-    <!-- REPORT -->
     <section id="report" class="view">
-      <h1>📄 Raport</h1>
+      <h2>📄 Raport</h2>
       <button id="exportPdf">Export PDF</button>
     </section>
 
