@@ -1,5 +1,6 @@
 /* ======================================================
-   TimeArena demo — App Core (NO ROLES, STABLE NAV)
+   TimeArena demo — App Core
+   Compatible with existing missions.js (UNCHANGED)
    ====================================================== */
 
 const $ = (id) => document.getElementById(id);
@@ -21,23 +22,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
 /* ---------------- NAVIGATION ---------------- */
 function initNav() {
-  const buttons = document.querySelectorAll(".nav button[data-view]");
-
-  buttons.forEach(btn => {
+  document.querySelectorAll(".nav button[data-view]").forEach(btn => {
     btn.addEventListener("click", () => {
       const viewId = btn.dataset.view;
-      if (!viewId) return;
-
       const target = document.getElementById(viewId);
-      if (!target) {
-        console.warn("View not found:", viewId);
-        return;
-      }
+      if (!target) return;
 
       document.querySelectorAll(".view").forEach(v =>
         v.classList.remove("active")
       );
-
       target.classList.add("active");
     });
   });
@@ -45,9 +38,9 @@ function initNav() {
 
 /* ---------------- CONTROLS ---------------- */
 function initControls() {
-  const toggleBtn = $("togglePlayMode");
-  if (toggleBtn) {
-    toggleBtn.onclick = () => {
+  const toggle = $("togglePlayMode");
+  if (toggle) {
+    toggle.onclick = () => {
       state.playMode = !state.playMode;
       addHistory(`Play Mode ${state.playMode ? "ON" : "OFF"}`);
       renderAll();
@@ -57,74 +50,73 @@ function initControls() {
   const exportBtn = $("exportPdf");
   if (exportBtn) {
     exportBtn.onclick = () => {
-      alert("Export PDF – urmează");
+      alert("Raport PDF – urmează");
     };
   }
 }
 
-/* ---------------- RENDER ---------------- */
+/* ---------------- RENDER ALL ---------------- */
 function renderAll() {
-  const minEl = $("minutes");
-  const lvlEl = $("level");
-  const motEl = $("motivation");
-  const playEl = $("playModeLabel");
-
-  if (minEl) minEl.textContent = state.minutes;
-  if (lvlEl) lvlEl.textContent = Math.floor(state.minutes / 100) + 1;
-  if (motEl) motEl.textContent = Math.min(100, 60 + state.minutes / 10) + "%";
-  if (playEl) playEl.textContent = state.playMode ? "ON" : "OFF";
-
-  renderMissions();
-  renderPenalties();
+  updateDashboard();
+  renderMissionList("missionList", window.MISSIONS?.winners, onWinnerClick);
+  renderMissionList("penaltyList", window.MISSIONS?.penalties, onPenaltyClick);
   renderHistory();
 }
 
-/* ---------------- MISSIONS ---------------- */
-function renderMissions() {
-  const list = $("missionList");
-  if (!list || !window.MISSIONS) return;
+/* ---------------- DASHBOARD ---------------- */
+function updateDashboard() {
+  $("minutes").textContent = state.minutes;
+  $("level").textContent = Math.floor(state.minutes / 100) + 1;
+  $("motivation").textContent =
+    Math.min(100, 60 + state.minutes / 10) + "%";
+  $("playModeLabel").textContent = state.playMode ? "ON" : "OFF";
+}
 
-  list.innerHTML = "";
+/* ---------------- GENERIC MISSION RENDERER ---------------- */
+function renderMissionList(containerId, missions, handler) {
+  const container = $(containerId);
+  if (!container || !Array.isArray(missions)) return;
 
-  window.MISSIONS.winners.forEach(m => {
-    const div = document.createElement("div");
-    div.className = "item";
-    div.textContent = `${m.title} (+${m.points} min)`;
+  container.innerHTML = "";
 
-    div.onclick = () => {
-      if (!state.playMode) {
-        alert("Play Mode este OFF");
-        return;
-      }
-      state.minutes += m.points;
-      addHistory(m.title);
-      renderAll();
-    };
+  missions.forEach(m => {
+    const card = document.createElement("div");
+    card.className = "mission-card";
 
-    list.appendChild(div);
+    const title = m.title || m.name || "Misiune";
+    const value =
+      m.points !== undefined ? `+${m.points} min` :
+      m.damage !== undefined ? `-${m.damage} min` :
+      "";
+
+    card.innerHTML = `
+      <span>${title}</span>
+      <strong>${value}</strong>
+    `;
+
+    card.onclick = () => handler(m);
+    container.appendChild(card);
   });
 }
 
-/* ---------------- PENALTIES ---------------- */
-function renderPenalties() {
-  const list = $("penaltyList");
-  if (!list || !window.MISSIONS) return;
+/* ---------------- HANDLERS ---------------- */
+function onWinnerClick(mission) {
+  if (!state.playMode) {
+    alert("Play Mode este OFF");
+    return;
+  }
 
-  list.innerHTML = "";
+  const points = Number(mission.points || 0);
+  state.minutes += points;
+  addHistory(mission.title || "Misiune câștig");
+  renderAll();
+}
 
-  window.MISSIONS.penalties.forEach(p => {
-    const div = document.createElement("div");
-    div.className = "item danger";
-    div.textContent = `${p.title} (-${p.damage} min)`;
-
-    div.onclick = () => {
-      state.minutes = Math.max(0, state.minutes - p.damage);
-      addHistory(p.title);
-      renderAll();
-    };
-
-    list.appendChild(div);
-  });
+function onPenaltyClick(mission) {
+  const damage = Number(mission.damage || 0);
+  state.minutes = Math.max(0, state.minutes - damage);
+  addHistory(mission.title || "Penalitate");
+  renderAll();
 }
 
 /* ---------------- HISTORY ---------------- */
@@ -141,7 +133,9 @@ function renderHistory() {
 }
 
 function addHistory(text) {
-  state.history.push(`${new Date().toLocaleTimeString()} – ${text}`);
+  state.history.push(
+    `${new Date().toLocaleTimeString()} – ${text}`
+  );
 }
 
 /* ---------------- SERVICE WORKER ---------------- */
