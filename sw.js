@@ -1,19 +1,29 @@
-const CACHE_NAME = "playtime-quest-v1";
-const FILES = [
+const CACHE = "timearena-demo-v1.0.0";
+
+const ASSETS = [
   "./",
   "./index.html",
   "./style.css",
+  "./missions.js",
   "./app.js",
-  "./manifest.json"
+  "./manifest.json",
+  "./icon-192.png",
+  "./icon-512.png"
 ];
 
-self.addEventListener("install", e => {
+self.addEventListener("install", (e) => {
+  e.waitUntil(caches.open(CACHE).then((c) => c.addAll(ASSETS)));
+});
+
+self.addEventListener("activate", (e) => {
   e.waitUntil(
-    caches.open(CACHE_NAME).then(cache => cache.addAll(FILES))
+    caches.keys().then(keys =>
+      Promise.all(keys.map(k => (k !== CACHE ? caches.delete(k) : null)))
+    )
   );
 });
 
-self.addEventListener("fetch", e => {
+self.addEventListener("fetch", (e) => {
   e.respondWith(
     caches.match(e.request).then(res => res || fetch(e.request))
   );
