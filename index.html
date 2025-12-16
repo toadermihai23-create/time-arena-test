@@ -12,30 +12,9 @@
 
 <body>
 
-<!-- LOGIN OVERLAY -->
-<div id="loginOverlay" class="overlay">
-  <div class="modal">
-    <h2>⏳ TimeArena demo</h2>
-    <p>Alege rolul</p>
-
-    <div class="role-buttons">
-      <button id="btnChild">👦 Copil</button>
-      <button id="btnParent">👨‍👩‍👦 Părinte</button>
-    </div>
-
-    <div id="pinWrap" class="pin-wrap hidden">
-      <input id="pinInput" type="password" placeholder="PIN părinte (1234)"/>
-      <div class="pin-actions">
-        <button id="pinCancel">Anulează</button>
-        <button id="pinOk">Intră</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- APP -->
 <div class="app">
 
+  <!-- NAV -->
   <nav class="nav">
     <h3>⏳ TimeArena</h3>
     <button data-view="dashboard">🏠 Panou</button>
@@ -47,40 +26,54 @@
     <button data-view="report">📄 Raport</button>
   </nav>
 
+  <!-- CONTENT -->
   <main class="content">
 
+    <!-- DASHBOARD -->
     <section id="dashboard" class="view active">
       <h1>🏠 Panou principal</h1>
-      <p>Minute: <b id="minutes">0</b></p>
-      <p>Rol: <b id="roleLabel">—</b></p>
-      <p>Play Mode: <b id="playModeLabel">OFF</b></p>
+      <p>⏳ Minute disponibile: <b id="minutes">0</b></p>
+      <p>⭐ Level: <b id="level">1</b></p>
+      <p>🔥 Motivație: <b id="motivation">100%</b></p>
+      <p>🔒 Play Mode: <b id="playModeLabel">OFF</b></p>
+      <button id="togglePlayMode">Toggle Play Mode</button>
     </section>
 
+    <!-- MISSIONS -->
     <section id="missions" class="view">
       <h1>🎯 Misiuni</h1>
       <div id="missionList"></div>
     </section>
 
+    <!-- SHOP -->
     <section id="shop" class="view">
       <h1>🛒 Magazin</h1>
-      <p>(în lucru)</p>
+      <p>(va fi extins)</p>
     </section>
 
+    <!-- PENALTIES -->
     <section id="penalties" class="view">
       <h1>🚫 Penalități</h1>
       <div id="penaltyList"></div>
     </section>
 
+    <!-- HISTORY -->
     <section id="history" class="view">
       <h1>📜 Istoric</h1>
       <div id="historyList"></div>
     </section>
 
+    <!-- RULES -->
     <section id="rules" class="view">
       <h1>📘 Reguli</h1>
-      <p>Minutele se câștigă, nu se cer.</p>
+      <ul>
+        <li>Minutele se câștigă, nu se cer.</li>
+        <li>Temele și limbile sunt obligatorii.</li>
+        <li>Play Mode poate fi ON sau OFF.</li>
+      </ul>
     </section>
 
+    <!-- REPORT -->
     <section id="report" class="view">
       <h1>📄 Raport</h1>
       <button id="exportPdf">Export PDF</button>
@@ -89,9 +82,7 @@
   </main>
 </div>
 
-<!-- SCRIPTS (ORDINE OBLIGATORIE) -->
 <script src="missions.js"></script>
 <script src="app.js"></script>
-
 </body>
 </html>
