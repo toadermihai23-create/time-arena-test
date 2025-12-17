@@ -1,42 +1,34 @@
-export const RULE_SECTIONS = [
-  {
-    title: "Reguli principale",
-    items: [
-      {
-        id: "r-clar",
-        headline: "Claritate: minutele sunt monedă",
-        text: "Timpul se câștigă prin misiuni. Penalitățile scad timp. Nu negociem după.",
-        tags: ["Core", "Fair Play"]
-      },
-      {
-        id: "r-oblig",
-        headline: "Obligatorii înainte de Bonus",
-        text: "Misiunile de Școală + Responsabilitate sunt prioritatea. Bonusurile vin după.",
-        tags: ["Priorități"]
-      },
-      {
-        id: "r-one-tap",
-        headline: "Un click = un adevăr",
-        text: "Când apeși “Completează”, e real. Dacă nu e real, nu apeși.",
-        tags: ["Onestitate"]
-      }
-    ]
-  },
-  {
-    title: "Reguli secundare",
-    items: [
-      {
-        id: "r-streak",
-        headline: "Streak",
-        text: "Streak crește când ai o zi cu progres real. Dacă sari total, streak se resetează.",
-        tags: ["Streak"]
-      },
-      {
-        id: "r-parent",
-        headline: "Părintele validează la nevoie",
-        text: "La început, părintele poate verifica misiunile mari (teme, limbi, ecran).",
-        tags: ["Control"]
-      }
-    ]
-  }
-];
+// rules.js — TimeArena demo (LIVE rules)
+const SHEET_ID = "1wBXFPcdip_mtGvhv5moAAMMNjtJuVFrSZfxcBPM-w_c";
+const TAB = "_Rules";
+const URL = `https://opensheet.elk.sh/${SHEET_ID}/${encodeURIComponent(TAB)}`;
+
+const toStr = (v, fallback = "") => (v ?? "").toString().trim() || fallback;
+const toInt = (v, fallback = 999) => {
+  const n = Number(String(v ?? "").replace(",", "."));
+  return Number.isFinite(n) ? Math.trunc(n) : fallback;
+};
+const toBool = (v, fallback = true) => {
+  const s = toStr(v).toLowerCase();
+  if (["false","0","nu","no"].includes(s)) return false;
+  if (["true","1","da","yes"].includes(s)) return true;
+  return fallback;
+};
+
+export async function loadRulesLive() {
+  const res = await fetch(URL, { cache: "no-store" });
+  const rows = await res.json();
+
+  // Coloane recomandate: ID, Titlu, Regula, Tip, Ordine, Activ
+  return rows
+    .filter(r => toStr(r.Regula))
+    .filter(r => toBool(r.Activ, true))
+    .map(r => ({
+      id: toStr(r.ID),
+      title: toStr(r.Titlu),
+      text: toStr(r.Regula),
+      type: toStr(r.Tip, "secundar"),
+      order: toInt(r.Ordine, 999)
+    }))
+    .sort((a,b) => a.order - b.order);
+}
