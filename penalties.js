@@ -1,39 +1,35 @@
-export const PENALTY_LEVELS = ["Toate", "Ușor", "Mediu", "Grav"];
+// penalties.js — TimeArena demo (LIVE catalog)
+const SHEET_ID = "1wBXFPcdip_mtGvhv5moAAMMNjtJuVFrSZfxcBPM-w_c";
+const TAB = "_Penalitati";
+const URL = `https://opensheet.elk.sh/${SHEET_ID}/${encodeURIComponent(TAB)}`;
 
-export const PENALTIES = [
-  {
-    id: "p-bed-skip",
-    title: "Patul Lăsat în Haos",
-    desc: "Patul nu e făcut până la prânz.",
-    level: "Ușor",
-    minutesLost: 45
-  },
-  {
-    id: "p-teeth-skip",
-    title: "Neglijare Igienă",
-    desc: "Spălat pe dinți ratat (dimineața sau seara).",
-    level: "Mediu",
-    minutesLost: 60
-  },
-  {
-    id: "p-homework-skip",
-    title: "Teme Neatinse",
-    desc: "Nu s-au făcut temele / nu există efort real 1h.",
-    level: "Grav",
-    minutesLost: 120
-  },
-  {
-    id: "p-attitude-boss",
-    title: "Boss Fight: Vorbit Urât",
-    desc: "Țipete / lipsă respect repetată (după avertizare).",
-    level: "Grav",
-    minutesLost: 90
-  },
-  {
-    id: "p-sneaky-screen",
-    title: "Ecran pe Furiș",
-    desc: "Ecran fără acord / minciună legată de ecran.",
-    level: "Grav",
-    minutesLost: 180
-  }
-];
+const toInt = (v, fallback = 0) => {
+  const n = Number(String(v ?? "").replace(",", "."));
+  return Number.isFinite(n) ? Math.trunc(n) : fallback;
+};
+const toStr = (v, fallback = "") => (v ?? "").toString().trim() || fallback;
+
+export async function loadPenaltiesLive() {
+  const res = await fetch(URL, { cache: "no-store" });
+  const rows = await res.json();
+
+  // Coloane recomandate în sheet: Nivel, Nume, Emoji, Când, Efect, Durata, Ecrane, BonusTime, Streak, ZileFixe, PunctePeZi, ReEntry
+  return rows
+    .filter(r => toStr(r.Nivel) !== "")
+    .map(r => ({
+      level: toInt(r.Nivel, 0),
+      name: toStr(r.Nume),
+      emoji: toStr(r.Emoji),
+      when: toStr(r["Când"] || r.Cand),
+      effect: toStr(r.Efect),
+      duration: toStr(r.Durata),
+
+      screens: toStr(r.Ecrane),
+      bonusTime: toStr(r.BonusTime),
+      streak: toStr(r.Streak),
+
+      fixedDays: toInt(r.ZileFixe, 0),
+      pointsPerDay: toInt(r.PunctePeZi, 0),
+      reEntry: toStr(r.ReEntry)
+    }));
+}
