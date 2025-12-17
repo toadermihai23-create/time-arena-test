@@ -1,3 +1,212 @@
 <!DOCTYPE html>
 <html lang="ro">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>TimeArena demo</title>
 
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#0b1220" />
+  <link rel="icon" href="icon-192.png">
+
+  <!-- iOS PWA hints -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="apple-touch-icon" href="icon-192.png">
+
+  <link rel="stylesheet" href="style.css"/>
+</head>
+
+<body>
+  <div class="app">
+
+    <!-- TOPBAR (mobile) -->
+    <header class="topbar">
+      <button id="btnMenu" class="icon-btn" aria-label="Meniu">☰</button>
+      <div class="topbar-title">
+        <div class="brand-mini">⏳ TimeArena</div>
+        <div class="brand-sub">demo • Kid Edition</div>
+      </div>
+      <button id="btnQuickAdd" class="pill">+ Bonus</button>
+    </header>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+      <div class="brand">
+        <div class="brand-badge">⏳</div>
+        <div class="brand-meta">
+          <div class="brand-name">TimeArena</div>
+          <div class="brand-sub">demo • Kid Edition</div>
+        </div>
+      </div>
+
+      <nav class="nav">
+        <button class="nav-item active" data-view="dashboard"><span class="nav-ic">🏠</span><span>Panou</span></button>
+        <button class="nav-item" data-view="missions"><span class="nav-ic">✅</span><span>Misiuni</span></button>
+        <button class="nav-item" data-view="penalties"><span class="nav-ic">💥</span><span>Penalități</span></button>
+        <button class="nav-item" data-view="rules"><span class="nav-ic">📜</span><span>Reguli</span></button>
+        <button class="nav-item" data-view="history"><span class="nav-ic">🕒</span><span>Istoric</span></button>
+        <button class="nav-item" data-view="report"><span class="nav-ic">📈</span><span>Raport</span></button>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="tiny">Kid: <b id="kidNameLabel">Nikita</b> • v0.1</div>
+        <button id="btnReset" class="ghost">Reset local</button>
+      </div>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="main">
+
+      <!-- DASHBOARD -->
+      <section class="view" id="view-dashboard">
+        <div class="grid">
+
+          <div class="card hero">
+            <div class="hero-left">
+              <div class="hello">Salut, <b id="kidNameHello">Nikita</b> 👑</div>
+              <div class="sub">Câștigi minute reale. Pierzi minute când sari peste obligatorii.</div>
+
+              <div class="stats">
+                <div class="stat">
+                  <div class="label">Timp disponibil</div>
+                  <div class="value"><span id="timeBalance">0</span> min</div>
+                </div>
+                <div class="stat">
+                  <div class="label">Nivel</div>
+                  <div class="value">Lv <span id="level">1</span></div>
+                </div>
+                <div class="stat">
+                  <div class="label">Streak</div>
+                  <div class="value"><span id="streak">0</span> 🔥</div>
+                </div>
+              </div>
+
+              <div class="progress-wrap">
+                <div class="progress-meta">
+                  <span>XP</span>
+                  <span><b id="xp">0</b> / <b id="nextXp">100</b></span>
+                </div>
+                <div class="progress">
+                  <div class="progress-bar" id="xpBar" style="width:0%"></div>
+                </div>
+              </div>
+
+              <div class="hero-actions">
+                <button class="btn" data-jump="missions">Alege misiune</button>
+                <button class="btn secondary" data-jump="penalties">Vezi penalități</button>
+              </div>
+            </div>
+
+            <div class="hero-right">
+              <div class="badge">
+                <div class="badge-top">Motivație</div>
+                <div class="badge-val" id="motivation">OK</div>
+                <div class="badge-sub" id="motivationHint">Ține ritmul 2 zile la rând.</div>
+              </div>
+
+              <div class="mini-card">
+                <div class="mini-title">Azi</div>
+                <div class="mini-row"><span>✔ Misiuni completate</span><b id="doneToday">0</b></div>
+                <div class="mini-row"><span>⏳ Minute câștigate</span><b id="earnedToday">0</b></div>
+                <div class="mini-row"><span>💥 Minute pierdute</span><b id="lostToday">0</b></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-title">Scurtături</div>
+            <div class="chips">
+              <button class="chip" data-filter="Responsabilitate">🧹 Responsabilitate</button>
+              <button class="chip" data-filter="Școală">📚 Școală</button>
+              <button class="chip" data-filter="Comportament">🙂 Comportament</button>
+              <button class="chip" data-filter="Sport">⚽ Sport</button>
+              <button class="chip" data-filter="Familie">👨‍👩‍👦 Familie</button>
+              <button class="chip" data-filter="Bonus">✨ Bonus</button>
+            </div>
+            <div class="muted">Apasă o categorie ca să vezi direct misiunile din ea.</div>
+          </div>
+
+          <div class="card">
+            <div class="card-title">Ultimele evenimente</div>
+            <div id="latestEvents" class="list"></div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- MISSIONS -->
+      <section class="view hidden" id="view-missions">
+        <div class="card">
+          <div class="card-head">
+            <div>
+              <div class="card-title">Misiuni</div>
+              <div class="muted">Alege o misiune → câștigi minute (și XP).</div>
+            </div>
+            <div class="row">
+              <select id="categorySelect" class="select"></select>
+              <input id="searchInput" class="input" placeholder="Caută misiune..." />
+            </div>
+          </div>
+          <div id="missionsGrid" class="cards"></div>
+        </div>
+      </section>
+
+      <!-- PENALTIES -->
+      <section class="view hidden" id="view-penalties">
+        <div class="card">
+          <div class="card-head">
+            <div>
+              <div class="card-title">Penalități</div>
+              <div class="muted">Aplică doar când e clar: “nu s-a făcut”.</div>
+            </div>
+            <div class="row">
+              <select id="penaltyLevelSelect" class="select"></select>
+            </div>
+          </div>
+          <div id="penaltiesGrid" class="cards"></div>
+        </div>
+      </section>
+
+      <!-- RULES -->
+      <section class="view hidden" id="view-rules">
+        <div class="card">
+          <div class="card-title">Reguli</div>
+          <div class="muted">Reguli principale + secundare (ușor de actualizat din rules.js)</div>
+          <div id="rulesList" class="rules"></div>
+        </div>
+      </section>
+
+      <!-- HISTORY -->
+      <section class="view hidden" id="view-history">
+        <div class="card">
+          <div class="card-head">
+            <div>
+              <div class="card-title">Istoric</div>
+              <div class="muted">Tot ce s-a întâmplat local (temporar, până la sync).</div>
+            </div>
+            <button id="btnExportJson" class="btn secondary">Export JSON</button>
+          </div>
+          <div id="historyList" class="list"></div>
+        </div>
+      </section>
+
+      <!-- REPORT -->
+      <section class="view hidden" id="view-report">
+        <div class="card">
+          <div class="card-title">Raport (demo)</div>
+          <div class="muted">Aici intră: raport săptămânal, PDF, grafice. Momentan: sumar pe ultimele 7 zile.</div>
+          <div id="reportBox" class="report"></div>
+        </div>
+      </section>
+
+      <!-- TOAST + CONFETTI -->
+      <div id="toast" class="toast hidden"></div>
+      <canvas id="confetti" class="confetti"></canvas>
+
+    </main>
+  </div>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>
