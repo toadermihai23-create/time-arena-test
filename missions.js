@@ -1,95 +1,49 @@
-export const MISSION_CATEGORIES = [
-  "Toate",
-  "Responsabilitate",
-  "Comportament",
-  "Școală",
-  "Sport",
-  "Familie",
-  "Bonus"
-];
+// missions.js — TimeArena demo (LIVE from Google Sheets)
+const SHEET_ID = "1wBXFPcdip_mtGvhv5moAAMMNjtJuVFrSZfxcBPM-w_c";
+const TAB = "_Misiuni vs. Penalitati";
+const URL = `https://opensheet.elk.sh/${SHEET_ID}/${encodeURIComponent(TAB)}`;
 
-// minute = timp câștigat
-// xp = progres nivel
-export const MISSIONS = [
-  {
-    id: "m-bed-first",
-    title: "Gardianul Patului",
-    desc: "Patul făcut imediat după trezire (fără negocieri).",
-    category: "Responsabilitate",
-    minutes: 5,
-    xp: 10,
-    dailyLimit: 1
-  },
-  {
-    id: "m-teeth-spark",
-    title: "Dinți Sclipitori",
-    desc: "Spălat pe dinți corect (2 minute) dimineața + seara.",
-    category: "Responsabilitate",
-    minutes: 5,
-    xp: 10,
-    dailyLimit: 2
-  },
-  {
-    id: "m-homework-hero",
-    title: "Eroul Temelor",
-    desc: "1h teme + verificare: caiet, exerciții, pregătire pentru mâine.",
-    category: "Școală",
-    minutes: 20,
-    xp: 25,
-    dailyLimit: 1
-  },
-  {
-    id: "m-language-master",
-    title: "Maestrul Limbilor",
-    desc: "1h limbă străină (lecție + exercițiu + recapitulare).",
-    category: "Școală",
-    minutes: 15,
-    xp: 25,
-    dailyLimit: 1
-  },
-  {
-    id: "m-ready-school",
-    title: "Pregătit de Școală",
-    desc: "Ghiozdan pregătit + haine + alarmă setată (fără grabă dimineața).",
-    category: "Școală",
-    minutes: 10,
-    xp: 15,
-    dailyLimit: 1
-  },
-  {
-    id: "m-sport-boost",
-    title: "Boost de Energie",
-    desc: "30 min mișcare (sport / alergare / exerciții / plimbare activă).",
-    category: "Sport",
-    minutes: 10,
-    xp: 20,
-    dailyLimit: 1
-  },
-  {
-    id: "m-family-ally",
-    title: "Aliatul Familiei",
-    desc: "Ajutor real: strâns masă / gunoi / ordonat fără să ți se ceară.",
-    category: "Familie",
-    minutes: 10,
-    xp: 15,
-    dailyLimit: 2
-  },
-  {
-    id: "m-good-attitude",
-    title: "Calm ca un Ninja",
-    desc: "Îți corectezi tonul imediat când ți se atrage atenția.",
-    category: "Comportament",
-    minutes: 5,
-    xp: 10,
-    dailyLimit: 3
-  },
-  {
-    id: "m-youtube-20",
-    title: "YouTube +20",
-    desc: "Bonus special: câștigi 20 min YouTube/Desene (doar dacă ai făcut obligatorii).",
-    category: "Bonus",
-    minutes: 20,
-    xp: 10,
-    dailyLimit: 1
-  }
-];
+const toInt = (v, fallback = 0) => {
+  const n = Number(String(v ?? "").replace(",", "."));
+  return Number.isFinite(n) ? Math.trunc(n) : fallback;
+};
+const toStr = (v, fallback = "") => (v ?? "").toString().trim() || fallback;
+
+const normPenaltyType = (v) => {
+  const s = toStr(v).toLowerCase();
+  if (["usor", "ușor", "light"].includes(s)) return "usor";
+  if (["mediu", "medium"].includes(s)) return "mediu";
+  if (["grav", "hard", "extrem"].includes(s)) return "grav";
+  return s || "usor";
+};
+
+export async function loadMissionsLive() {
+  const res = await fetch(URL, { cache: "no-store" });
+  const rows = await res.json();
+
+  return rows
+    .filter(r => toStr(r.ID_misiune))
+    .map(r => {
+      const rewardMin = toInt(r.Reward_min, 0);
+      let penaltyMin = toInt(r.Penalty_min, 0);
+      if (penaltyMin > 0) penaltyMin = -penaltyMin;
+
+      return {
+        id: toStr(r.ID_misiune),
+        name: toStr(r.Nume_misiune),
+        description: toStr(r.Descriere_misiune),
+        type: toStr(r.Tip_misiune, "standard"),
+        xp: toInt(r.XP, 0),
+        rewardMin,
+
+        penalty: {
+          id: toStr(r.ID_penalty),
+          name: toStr(r.Nume_penalty),
+          description: toStr(r.Descriere_penalty),
+          type: normPenaltyType(r.Tip_penalty),
+          consequence: toStr(r.Consecinta),
+          penaltyMin
+        }
+      };
+    });
+}
