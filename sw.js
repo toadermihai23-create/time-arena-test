@@ -1,4 +1,4 @@
-const CACHE_NAME = "timearena-demo-v0.1";
+const CACHE_NAME = "timearena-v1.00";
 const ASSETS = [
   "./",
   "./index.html",
@@ -22,7 +22,7 @@ self.addEventListener("install", (event) => {
 self.addEventListener("activate", (event) => {
   event.waitUntil(
     caches.keys().then(keys =>
-      Promise.all(keys.map(k => (k === CACHE_NAME ? null : caches.delete(k))))
+      Promise.all(keys.map(k => (k !== CACHE_NAME ? caches.delete(k) : null)))
     )
   );
   self.clients.claim();
@@ -30,14 +30,16 @@ self.addEventListener("activate", (event) => {
 
 self.addEventListener("fetch", (event) => {
   const req = event.request;
+
+  // Network-first for opensheet (LIVE data), cache fallback
+  if (req.url.includes("opensheet.elk.sh")) {
+    event.respondWith(
+      fetch(req).then((res) => res).catch(() => caches.match(req))
+    );
+    return;
+  }
+
   event.respondWith(
-    caches.match(req).then((cached) => {
-      if (cached) return cached;
-      return fetch(req).then((res) => {
-        const copy = res.clone();
-        caches.open(CACHE_NAME).then((cache) => cache.put(req, copy));
-        return res;
-      }).catch(() => caches.match("./index.html"));
-    })
+    caches.match(req).then((cached) => cached || fetch(req))
   );
 });
