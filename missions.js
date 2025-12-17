@@ -1,5 +1,7 @@
 // missions.js — TimeArena demo (LIVE from Google Sheets)
-const SHEET_ID = "1wBXFPcdip_mtGvhv5moAAMMNjtJuVFrSZfxcBPM-w_c";
+// Suportă rânduri de categorie (fără ID_misiune)
+
+const SHEET_ID = "1avH7qScUDYhSj6xepbEGN6AdsUOQb1JJXSFLTwyauWI";
 const TAB = "_Misiuni vs. Penalitati";
 const URL = `https://opensheet.elk.sh/${SHEET_ID}/${encodeURIComponent(TAB)}`;
 
@@ -21,16 +23,30 @@ export async function loadMissionsLive() {
   const res = await fetch(URL, { cache: "no-store" });
   const rows = await res.json();
 
+  let currentCategory = "General";
+
   return rows
-    .filter(r => toStr(r.ID_misiune))
-    .map(r => {
+    .map((r) => {
+      const id = toStr(r.ID_misiune);
+      const name = toStr(r.Nume_misiune);
+
+      // 🔹 RÂND DE CATEGORIE (fără ID, dar cu text)
+      if (!id && name) {
+        currentCategory = name;
+        return null;
+      }
+
+      // 🔹 RÂND INVALID
+      if (!id) return null;
+
       const rewardMin = toInt(r.Reward_min, 0);
       let penaltyMin = toInt(r.Penalty_min, 0);
       if (penaltyMin > 0) penaltyMin = -penaltyMin;
 
       return {
-        id: toStr(r.ID_misiune),
-        name: toStr(r.Nume_misiune),
+        id,
+        category: currentCategory, // 🔥 moștenită din rândul de categorie
+        name,
         description: toStr(r.Descriere_misiune),
         type: toStr(r.Tip_misiune, "standard"),
         xp: toInt(r.XP, 0),
@@ -45,5 +61,6 @@ export async function loadMissionsLive() {
           penaltyMin
         }
       };
-    });
+    })
+    .filter(Boolean);
 }
